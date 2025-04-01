@@ -1,7 +1,8 @@
+// lib/models/deck.dart
 class Deck {
   final String title;
   final String description;
-  final List<dynamic> cards; // Storing card JSON from Scryfall
+  final List<dynamic> cards; // Holds card data (e.g., from Scryfall or hard-coded)
 
   Deck({
     required this.title,
@@ -9,7 +10,7 @@ class Deck {
     List<dynamic>? cards,
   }) : cards = cards ?? [];
 
-  // Optional: a quick way to clone an existing deck
+  // Optional clone method if you need to duplicate decks
   Deck clone() {
     return Deck(
       title: title,
