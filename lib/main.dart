@@ -1,4 +1,3 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'models/deck.dart';
 import 'screens/deck_detail_screen.dart';
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Deck Builder',
       debugShowCheckedModeBanner: false,
+      // Using the default blue theme; you can customize later.
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomeScreen(),
     );
@@ -31,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Deck> decks = [
-    // Existing prefab decks...
+    // Blue Control deck with 5 cards
     Deck(
       title: 'Blue Control',
       description: 'A control deck built around counterspells.',
@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ],
     ),
+    // Red Aggro deck with 5 cards
     Deck(
       title: 'Red Aggro',
       description: 'An aggressive deck focused on fast damage.',
@@ -114,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ],
     ),
+    // Green Ramp deck with 5 cards
     Deck(
       title: 'Green Ramp',
       description: 'Ramp up to huge creatures quickly.',
@@ -161,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Deck Builder'),
         actions: [
           // Button to create a new custom deck with a name/description
@@ -189,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context), // cancel
+                        onPressed: () => Navigator.pop(context),
                         child: const Text('Cancel'),
                       ),
                       ElevatedButton(
@@ -204,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {
                             decks.add(newDeck);
                           });
-                          Navigator.pop(context); // close dialog
+                          Navigator.pop(context);
                         },
                         child: const Text('Create'),
                       ),
@@ -214,11 +217,10 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          // Button to clone prefab decks
+          // Button to clone prefab decks (cloning the first deck as an example)
           IconButton(
             icon: const Icon(Icons.library_books),
             onPressed: () {
-              // For demo, clone the first deck in the list
               if (decks.isNotEmpty) {
                 final clonedDeck = Deck(
                   title: '${decks[0].title} (Clone)',
@@ -248,7 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
               subtitle: Text(deck.description),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // Navigate to deck detail
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -261,14 +262,13 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        // Global search button for card lookup
+        child: const Icon(Icons.search),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CardSearchScreen()),
+            MaterialPageRoute(builder: (context) => const CardSearchScreen()),
           );
         },
-        child: const Icon(Icons.search),
       ),
     );
   }

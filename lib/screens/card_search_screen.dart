@@ -1,53 +1,59 @@
+// lib/screens/card_search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CardSearchScreen extends StatefulWidget {
+  const CardSearchScreen({Key? key}) : super(key: key);
+
   @override
   _CardSearchScreenState createState() => _CardSearchScreenState();
 }
 
 class _CardSearchScreenState extends State<CardSearchScreen> {
   String query = '';
-  List<dynamic> cards = [];
   bool isLoading = false;
+  List<dynamic> cards = [];
 
   Future<void> searchCards(String query) async {
-    setState(() => isLoading = true);
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       final response = await http.get(
         Uri.parse('https://api.scryfall.com/cards/search?q=$query'),
       );
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          cards = data['data'];
-          isLoading = false;
+          cards = data['data'] ?? [];
         });
-      } else {
-        setState(() => isLoading = false);
       }
     } catch (e) {
+      // handle errors, show a message, etc.
       print('Error searching cards: $e');
-      setState(() => isLoading = false);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Search Cards')),
+      appBar: AppBar(
+        title: const Text('Search Cards'),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
-              onChanged: (text) {
-                query = text;
-              },
-              onSubmitted: searchCards,
+              onChanged: (val) => query = val,
+              onSubmitted: (val) => searchCards(val),
               decoration: InputDecoration(
                 labelText: 'Enter card name...',
                 suffixIcon: IconButton(
@@ -63,18 +69,18 @@ class _CardSearchScreenState extends State<CardSearchScreen> {
               itemCount: cards.length,
               itemBuilder: (context, index) {
                 final card = cards[index];
+                final name = card['name'] ?? 'Unknown';
                 final imageUrl = card['image_uris']?['small'];
-                final name = card['name'] ?? '';
-                final type = card['type_line'] ?? '';
+                final typeLine = card['type_line'] ?? '';
 
                 return ListTile(
                   leading: imageUrl != null
                       ? Image.network(imageUrl)
                       : const Icon(Icons.image_not_supported),
                   title: Text(name),
-                  subtitle: Text(type),
+                  subtitle: Text(typeLine),
                   onTap: () {
-                    // Return the selected card to whoever pushed this screen
+                    // If you want to pop with the selected card:
                     Navigator.pop(context, card);
                   },
                 );
