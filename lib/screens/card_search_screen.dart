@@ -1,4 +1,3 @@
-// lib/screens/card_search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -31,7 +30,6 @@ class _CardSearchScreenState extends State<CardSearchScreen> {
         });
       }
     } catch (e) {
-      // handle errors, show a message, etc.
       print('Error searching cards: $e');
     } finally {
       setState(() {
@@ -72,7 +70,6 @@ class _CardSearchScreenState extends State<CardSearchScreen> {
                 final name = card['name'] ?? 'Unknown';
                 final imageUrl = card['image_uris']?['small'];
                 final typeLine = card['type_line'] ?? '';
-
                 return ListTile(
                   leading: imageUrl != null
                       ? Image.network(imageUrl)
@@ -80,7 +77,6 @@ class _CardSearchScreenState extends State<CardSearchScreen> {
                   title: Text(name),
                   subtitle: Text(typeLine),
                   onTap: () {
-                    // If you want to pop with the selected card:
                     Navigator.pop(context, card);
                   },
                 );

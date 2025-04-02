@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Deck Builder',
       debugShowCheckedModeBanner: false,
-      // Using the default blue theme; you can customize later.
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomeScreen(),
     );
@@ -166,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         title: const Text('Deck Builder'),
         actions: [
-          // Button to create a new custom deck with a name/description
+          // Create new deck button
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -217,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          // Button to clone prefab decks (cloning the first deck as an example)
+          // Clone deck button (clones first deck as an example)
           IconButton(
             icon: const Icon(Icons.library_books),
             onPressed: () {
@@ -235,31 +234,73 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: decks.length,
-        itemBuilder: (context, index) {
-          final deck = decks[index];
-          return Card(
-            margin: const EdgeInsets.all(10),
-            elevation: 3,
-            child: ListTile(
-              title: Text(
-                deck.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Color(0xFFE3F2FD)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          children: [
+            // Hint box below the AppBar
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              child: const Text(
+                'Welcome to the MTG Deck Builder! Create or search for cards to build the perfect deck.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.black54,
+                ),
               ),
-              subtitle: Text(deck.description),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DeckDetailScreen(deck: deck),
-                  ),
-                );
-              },
             ),
-          );
-        },
+            // Expanded deck list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                itemCount: decks.length,
+                itemBuilder: (context, index) {
+                  final deck = decks[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(12),
+                      title: Text(
+                        deck.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(deck.description),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DeckDetailScreen(deck: deck),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      // Bottom info bar to fill empty space
+      bottomNavigationBar: Container(
+        height: 60,
+        color: Colors.blue,
+        child: Center(
+          child: Text(
+            'You have ${decks.length} decks',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search),
